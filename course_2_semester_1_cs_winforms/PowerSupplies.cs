@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,10 @@ namespace course_2_semester_1_cs_winforms
         {
             this.Count = count;
             supplies = new UninterruptivlePowerSupply[count];
+            for (int i = 0; i < count; i++)
+            {
+                supplies[i] = new UninterruptivlePowerSupply();
+            }
         }
 
         public UninterruptivlePowerSupply this[int index]
@@ -41,8 +46,11 @@ namespace course_2_semester_1_cs_winforms
             }
         }
 
-        public void SelectionSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+         public long SelectionSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare, Action action)
         {
+            var globalWatch = new Stopwatch();
+            globalWatch.Start();
+
             int length = Count;
             UninterruptivlePowerSupply temp;
             for (int j = 0; j < length - 1; j++)
@@ -58,11 +66,16 @@ namespace course_2_semester_1_cs_winforms
                 temp = supplies[j];
                 supplies[j] = supplies[min];
                 supplies[min] = temp;
+                action();
             }
+            globalWatch.Stop();
+            return globalWatch.ElapsedMilliseconds;
         }
 
-        public void BubbleSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        public long BubbleSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare, Action action)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             UninterruptivlePowerSupply temp;
             for (int j = 0; j < Count - 1; j++)
             {
@@ -73,16 +86,22 @@ namespace course_2_semester_1_cs_winforms
                         temp = supplies[i + 1];
                         supplies[i + 1] = supplies[i];
                         supplies[i] = temp;
+                        action();
                     }
                 }
             }
+            stopwatch.Stop();
+            return stopwatch.ElapsedMilliseconds;
         }
 
-        public void ShakerSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        public long ShakerSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare, Action action)
         {
             bool isSwapped = true;
             int start = 0;
             int end = Count;
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             while (isSwapped == true)
             {
@@ -92,6 +111,7 @@ namespace course_2_semester_1_cs_winforms
                     if (compare(supplies[i], supplies[i + 1]))
                     {
                         (supplies[i + 1], supplies[i]) = (supplies[i], supplies[i + 1]);
+                        action();
                         isSwapped = true;
                     }
                 }
@@ -104,15 +124,21 @@ namespace course_2_semester_1_cs_winforms
                     if (compare(supplies[i], supplies[i + 1]))
                     {
                         (supplies[i + 1], supplies[i]) = (supplies[i], supplies[i + 1]);
+                        action();
                         isSwapped = true;
                     }
                 }
                 start = start + 1;
             }
+            stopwatch.Stop();
+            return stopwatch.ElapsedMilliseconds;
         }
 
-        public void ShellSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare)
+        public long ShellSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare, Action action)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             for (int interval = Count / 2; interval > 0; interval /= 2)
             {
                 for (int i = interval; i < Count; i++)
@@ -122,11 +148,15 @@ namespace course_2_semester_1_cs_winforms
                     while (k >= interval && compare(supplies[k - interval], currentKey))
                     {
                         supplies[k] = supplies[k - interval];
+                        action();
                         k -= interval;
                     }
                     supplies[k] = currentKey;
+                    action();
                 }
             }
+            stopwatch.Stop();
+            return stopwatch.ElapsedMilliseconds;
         }
 
     }

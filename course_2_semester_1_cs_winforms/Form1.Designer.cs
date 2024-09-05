@@ -48,10 +48,12 @@
             // 
             // SortingContainerPanel
             // 
+            SortingContainerPanel.BackColor = Color.White;
             SortingContainerPanel.Location = new Point(12, 12);
             SortingContainerPanel.Name = "SortingContainerPanel";
             SortingContainerPanel.Size = new Size(860, 404);
             SortingContainerPanel.TabIndex = 0;
+            SortingContainerPanel.Paint += SortingContainerPanel_Paint;
             // 
             // SortButton
             // 
@@ -104,7 +106,7 @@
             BrandRadioButton.TabIndex = 5;
             BrandRadioButton.Text = "Марке";
             BrandRadioButton.UseVisualStyleBackColor = true;
-            BrandRadioButton.CheckedChanged += radioButton2_CheckedChanged;
+            BrandRadioButton.CheckedChanged += BrandRadioButton_CheckedChanged;
             // 
             // CapacityRadioButton
             // 

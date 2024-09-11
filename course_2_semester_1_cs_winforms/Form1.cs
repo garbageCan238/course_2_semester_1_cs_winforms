@@ -1,3 +1,6 @@
+using System;
+using System.Security.Cryptography;
+using System.Text;
 using static course_2_semester_1_cs_winforms.UninterruptivlePowerSupply;
 
 namespace course_2_semester_1_cs_winforms
@@ -17,13 +20,15 @@ namespace course_2_semester_1_cs_winforms
         private ComparingValue currentComparingParam;
         private Graphics graphics;
         private PowerSupplies original;
+        private Random random;
 
         public MainForm()
         {
             currentSortParam = byManufacturer;
             currentSortMethod = SortMethod.Direct;
             InitializeComponent();
-            original = new PowerSupplies(count, (int)SeedNumericUpDown.Value);
+            random = new Random((int)SeedNumericUpDown.Value);
+            original = new PowerSupplies(count, random);
             powerSupplies = new PowerSupplies(count);
             graphics = SortingContainerPanel.CreateGraphics();
             SetOriginalData();
@@ -162,8 +167,22 @@ namespace course_2_semester_1_cs_winforms
 
         private void SeedNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
-            original = new PowerSupplies(count, (int)SeedNumericUpDown.Value);
+            random = new Random(GetStringHash(SeedNumericUpDown.Value.ToString()));
+            original = new PowerSupplies(count, random);
             SetOriginalData();
+        }
+
+        public int GetStringHash(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return 0;
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] data = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+                int hash = BitConverter.ToInt32(data, 0);
+                return hash;
+            }
         }
     }
     enum SortMethod

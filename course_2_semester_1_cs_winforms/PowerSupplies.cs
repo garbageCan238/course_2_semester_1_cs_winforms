@@ -35,8 +35,17 @@ namespace course_2_semester_1_cs_winforms
             var random = new Random(seed);
             for (int i = 0; i < count; i++)
             {
-                var newSeed = (seed + i).GetHashCode();
-                supplies[i] = new UninterruptivlePowerSupply(random.Next());
+                supplies[i] = new UninterruptivlePowerSupply(random);
+            }
+        }
+
+        public PowerSupplies(int count, Random random)
+        {
+            this.Count = count;
+            supplies = new UninterruptivlePowerSupply[count];
+            for (int i = 0; i < count; i++)
+            {
+                supplies[i] = new UninterruptivlePowerSupply(random);
             }
         }
 

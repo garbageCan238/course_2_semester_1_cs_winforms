@@ -33,13 +33,23 @@
             this.manufacturer = possibleManufacturers[new Random().Next(0, possibleManufacturers.Length)];
             this.brand = possibleBrands[new Random().Next(0, possibleBrands.Length)];
             this.capacity = new Random().Next(0, 1000);
+            ;
         }
 
         public UninterruptivlePowerSupply(int seed)
         {
-            this.manufacturer = possibleManufacturers[new Random(seed).Next(0, possibleManufacturers.Length)];
-            this.brand = possibleBrands[new Random(seed).Next(0, possibleBrands.Length)];
-            this.capacity = new Random(seed).Next(0, 1000);
+            var random = new Random(seed);
+            this.manufacturer = possibleManufacturers[random.Next(0, possibleManufacturers.Length)];
+            this.brand = possibleBrands[random.Next(0, possibleBrands.Length)];
+            var test = random.Next(0, 1000);
+            this.capacity = test;
+        }
+
+        public UninterruptivlePowerSupply(Random random)
+        {
+            this.manufacturer = possibleManufacturers[random.Next(0, possibleManufacturers.Length)];
+            this.brand = possibleBrands[random.Next(0, possibleBrands.Length)];
+            this.capacity = random.Next(0, 1000);
         }
 
         public virtual void PrintInfo()

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace course_2_semester_1_cs_winforms
 {
@@ -30,6 +25,18 @@ namespace course_2_semester_1_cs_winforms
             for (int i = 0; i < count; i++)
             {
                 supplies[i] = new UninterruptivlePowerSupply();
+            }
+        }
+
+        public PowerSupplies(int count, int seed)
+        {
+            this.Count = count;
+            supplies = new UninterruptivlePowerSupply[count];
+            var random = new Random(seed);
+            for (int i = 0; i < count; i++)
+            {
+                var newSeed = (seed + i).GetHashCode();
+                supplies[i] = new UninterruptivlePowerSupply(random.Next());
             }
         }
 
@@ -155,8 +162,43 @@ namespace course_2_semester_1_cs_winforms
                     action();
                 }
             }
+
             stopwatch.Stop();
             return stopwatch.ElapsedMilliseconds;
+        }
+
+        public long InsertionSort(Func<UninterruptivlePowerSupply, UninterruptivlePowerSupply, bool> compare, Action action)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            for (int i = 0; i < Count - 1; i++)
+            {
+                for (int j = i + 1; j > 0; j--)
+                {
+                    if (compare(supplies[j - 1], supplies[j]))
+                    {
+                        (supplies[j], supplies[j - 1]) = (supplies[j - 1], supplies[j]);
+                        action();
+                    }
+                }
+            }
+
+            stopwatch.Stop();
+            return stopwatch.ElapsedMilliseconds;
+        }
+
+        public PowerSupplies Copy()
+        {
+            var copy = new PowerSupplies(Count);
+            for (int i = 0; i < Count; i++)
+            {
+                if (this[i] != null)
+                    copy[i] = (UninterruptivlePowerSupply)this[i].Clone();
+                else
+                    copy[i] = null;
+            }
+            return copy;
         }
 
     }

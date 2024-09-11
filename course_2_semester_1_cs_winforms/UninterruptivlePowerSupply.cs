@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace course_2_semester_1_cs_winforms
+﻿namespace course_2_semester_1_cs_winforms
 {
-    class UninterruptivlePowerSupply
+    class UninterruptivlePowerSupply : ICloneable
     {
         public string manufacturer { get; set; }
         public string brand { get; set; }
@@ -40,9 +34,22 @@ namespace course_2_semester_1_cs_winforms
             this.brand = possibleBrands[new Random().Next(0, possibleBrands.Length)];
             this.capacity = new Random().Next(0, 1000);
         }
+
+        public UninterruptivlePowerSupply(int seed)
+        {
+            this.manufacturer = possibleManufacturers[new Random(seed).Next(0, possibleManufacturers.Length)];
+            this.brand = possibleBrands[new Random(seed).Next(0, possibleBrands.Length)];
+            this.capacity = new Random(seed).Next(0, 1000);
+        }
+
         public virtual void PrintInfo()
         {
             Console.WriteLine($"UninterruptivlePowerSupply: manufacturer: {manufacturer}, brand: {brand}, capacity: {capacity}");
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
 
         public enum ComparingValue

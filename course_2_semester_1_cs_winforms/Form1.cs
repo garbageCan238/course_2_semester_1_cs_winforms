@@ -1,6 +1,3 @@
-using System.Diagnostics;
-using System.Reflection;
-using System.Windows.Forms;
 using static course_2_semester_1_cs_winforms.UninterruptivlePowerSupply;
 
 namespace course_2_semester_1_cs_winforms
@@ -19,16 +16,17 @@ namespace course_2_semester_1_cs_winforms
         private SortMethod currentSortMethod;
         private ComparingValue currentComparingParam;
         private Graphics graphics;
+        private PowerSupplies original;
 
         public MainForm()
         {
             currentSortParam = byManufacturer;
             currentSortMethod = SortMethod.Direct;
-            powerSupplies = new PowerSupplies(count);
             InitializeComponent();
+            original = new PowerSupplies(count, (int)SeedNumericUpDown.Value);
+            powerSupplies = new PowerSupplies(count);
             graphics = SortingContainerPanel.CreateGraphics();
-
-            LoadNewPowerSupplies();
+            SetOriginalData();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -59,12 +57,16 @@ namespace course_2_semester_1_cs_winforms
                     time = powerSupplies.ShellSort(currentSortParam, RedrawPowerSupplies);
                     MessageBox.Show($"Прошло миллисекунд: {time}.");
                     break;
+                case SortMethod.Insertion:
+                    time = powerSupplies.InsertionSort(currentSortParam, RedrawPowerSupplies);
+                    MessageBox.Show($"Прошло миллисекунд: {time}.");
+                    break;
             }
         }
 
         private void MixButton_Click(object sender, EventArgs e)
         {
-            LoadNewPowerSupplies();
+            SetOriginalData();
         }
 
         // Sorting params
@@ -115,9 +117,14 @@ namespace course_2_semester_1_cs_winforms
             currentSortMethod = SortMethod.Shell;
         }
 
-        private void LoadNewPowerSupplies()
+        private void InsertionSortRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            powerSupplies = new PowerSupplies(count);
+            currentSortMethod = SortMethod.Insertion;
+        }
+
+        private void SetOriginalData()
+        {
+            powerSupplies = original.Copy();
             ChangeComparingParameter(currentComparingParam);
             RedrawPowerSupplies();
         }
@@ -128,7 +135,7 @@ namespace course_2_semester_1_cs_winforms
             for (int index = 0; index < count; index++)
             {
                 var clearPen = new Pen(Color.White, 14);
-                var clear1 = new Point(currentPixel, 404);
+                var clear1 = new Point(currentPixel, (int)(404f - ((float)powerSupplies[index].GetComparingValue()) / 1000f * 404));
                 var clear2 = new Point(currentPixel, 0);
                 graphics.DrawLine(clearPen, clear1, clear2);
 
@@ -142,24 +149,7 @@ namespace course_2_semester_1_cs_winforms
 
         private void SortingContainerPanel_Paint(object sender, PaintEventArgs e)
         {
-            base.OnPaint(e);
-            using (Graphics g = e.Graphics)
-            {
-                var currentPixel = 10;
-                for (int index = 0; index < count; index++)
-                {
-                    var clearPen = new Pen(Color.White, 14);
-                    var clear1 = new Point(currentPixel, 404);
-                    var clear2 = new Point(currentPixel, 0);
-                    g.DrawLine(clearPen, clear1, clear2);
-
-                    var p = new Pen(Color.Black, 12);
-                    var point1 = new Point(currentPixel, 404);
-                    var point2 = new Point(currentPixel, (int)(404f - ((float)powerSupplies[index].capacity) / 1000f * 404));
-                    g.DrawLine(p, point1, point2);
-                    currentPixel += 17;
-                }
-            }
+            RedrawPowerSupplies();
         }
 
         private void ChangeComparingParameter(ComparingValue value)
@@ -169,15 +159,19 @@ namespace course_2_semester_1_cs_winforms
                 powerSupplies[i].SetComparingValue(value);
             }
         }
+
+        private void SeedNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            original = new PowerSupplies(count, (int)SeedNumericUpDown.Value);
+            SetOriginalData();
+        }
     }
-
-
-
     enum SortMethod
     {
         Direct,
         Bubble,
         Shaker,
-        Shell
+        Shell,
+        Insertion
     }
 }

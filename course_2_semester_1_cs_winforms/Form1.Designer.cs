@@ -41,9 +41,13 @@
             DirectSortRadioButton = new RadioButton();
             ShellSortRadioButton = new RadioButton();
             panel1 = new Panel();
+            InsertionSortRadioButton = new RadioButton();
             panel2 = new Panel();
+            SeedNumericUpDown = new NumericUpDown();
+            SeedLabel = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)SeedNumericUpDown).BeginInit();
             SuspendLayout();
             // 
             // SortingContainerPanel
@@ -176,6 +180,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(InsertionSortRadioButton);
             panel1.Controls.Add(MethodLabel);
             panel1.Controls.Add(ShellSortRadioButton);
             panel1.Controls.Add(DirectSortRadioButton);
@@ -183,8 +188,19 @@
             panel1.Controls.Add(BubbleSortRadioButton);
             panel1.Location = new Point(315, 434);
             panel1.Name = "panel1";
-            panel1.Size = new Size(200, 126);
+            panel1.Size = new Size(200, 151);
             panel1.TabIndex = 12;
+            // 
+            // InsertionSortRadioButton
+            // 
+            InsertionSortRadioButton.AutoSize = true;
+            InsertionSortRadioButton.Location = new Point(5, 125);
+            InsertionSortRadioButton.Name = "InsertionSortRadioButton";
+            InsertionSortRadioButton.Size = new Size(151, 19);
+            InsertionSortRadioButton.TabIndex = 12;
+            InsertionSortRadioButton.Text = "Сортировка вставками";
+            InsertionSortRadioButton.UseVisualStyleBackColor = true;
+            InsertionSortRadioButton.CheckedChanged += InsertionSortRadioButton_CheckedChanged;
             // 
             // panel2
             // 
@@ -197,18 +213,37 @@
             panel2.Size = new Size(138, 100);
             panel2.TabIndex = 13;
             // 
+            // SeedNumericUpDown
+            // 
+            SeedNumericUpDown.Location = new Point(12, 555);
+            SeedNumericUpDown.Name = "SeedNumericUpDown";
+            SeedNumericUpDown.Size = new Size(120, 23);
+            SeedNumericUpDown.TabIndex = 14;
+            SeedNumericUpDown.ValueChanged += SeedNumericUpDown_ValueChanged;
+            // 
+            // SeedLabel
+            // 
+            SeedLabel.AutoSize = true;
+            SeedLabel.Location = new Point(12, 534);
+            SeedLabel.Name = "SeedLabel";
+            SeedLabel.Size = new Size(31, 15);
+            SeedLabel.TabIndex = 15;
+            SeedLabel.Text = "Сид:";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(884, 561);
+            ClientSize = new Size(884, 611);
+            Controls.Add(SeedLabel);
+            Controls.Add(SeedNumericUpDown);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Controls.Add(MixButton);
             Controls.Add(SortButton);
             Controls.Add(SortingContainerPanel);
-            MaximumSize = new Size(900, 600);
-            MinimumSize = new Size(900, 600);
+            MaximumSize = new Size(900, 650);
+            MinimumSize = new Size(900, 650);
             Name = "MainForm";
             Text = "Сортировка блоков питания";
             Load += Form1_Load;
@@ -216,7 +251,9 @@
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)SeedNumericUpDown).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -235,5 +272,8 @@
         private RadioButton ShellSortRadioButton;
         private Panel panel1;
         private Panel panel2;
+        private RadioButton InsertionSortRadioButton;
+        private NumericUpDown SeedNumericUpDown;
+        private Label SeedLabel;
     }
 }

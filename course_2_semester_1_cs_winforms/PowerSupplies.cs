@@ -162,10 +162,10 @@ namespace course_2_semester_1_cs_winforms
                 {
                     var currentKey = supplies[i];
                     var k = i;
-                    if (k >= interval)
-                        action([k - interval, i]);
+                    action([k - interval, i]);
                     while (k >= interval && compare(supplies[k - interval], currentKey))
                     {
+                        action([k - interval, i]);
                         supplies[k] = supplies[k - interval];
                         k -= interval;
                     }

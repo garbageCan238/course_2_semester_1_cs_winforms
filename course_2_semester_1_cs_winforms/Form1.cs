@@ -25,7 +25,7 @@ namespace course_2_semester_1_cs_winforms
         public MainForm()
         {
             currentSortParam = byManufacturer;
-            currentSortMethod = SortMethod.Direct;
+            currentSortMethod = SortMethod.Selection;
             InitializeComponent();
             random = new Random((int)SeedNumericUpDown.Value);
             original = new PowerSupplies(count, random);
@@ -46,24 +46,29 @@ namespace course_2_semester_1_cs_winforms
             long time;
             switch (currentSortMethod)
             {
-                case SortMethod.Direct:
+                case SortMethod.Selection:
                     time = powerSupplies.SelectionSort(currentSortParam, RedrawPowerSupplies);
+                    RedrawPowerSupplies([]);
                     MessageBox.Show($"Прошло миллисекунд: {time}.");
                     break;
                 case SortMethod.Bubble:
                     time = powerSupplies.BubbleSort(currentSortParam, RedrawPowerSupplies);
+                    RedrawPowerSupplies([]);
                     MessageBox.Show($"Прошло миллисекунд: {time}.");
                     break;
                 case SortMethod.Shaker:
                     time = powerSupplies.ShakerSort(currentSortParam, RedrawPowerSupplies);
+                    RedrawPowerSupplies([]);
                     MessageBox.Show($"Прошло миллисекунд: {time}.");
                     break;
                 case SortMethod.Shell:
                     time = powerSupplies.ShellSort(currentSortParam, RedrawPowerSupplies);
+                    RedrawPowerSupplies([]);
                     MessageBox.Show($"Прошло миллисекунд: {time}.");
                     break;
                 case SortMethod.Insertion:
                     time = powerSupplies.InsertionSort(currentSortParam, RedrawPowerSupplies);
+                    RedrawPowerSupplies([]);
                     MessageBox.Show($"Прошло миллисекунд: {time}.");
                     break;
             }
@@ -81,7 +86,7 @@ namespace course_2_semester_1_cs_winforms
             currentSortParam = byManufacturer;
             ChangeComparingParameter(ComparingValue.Manufacturer);
             currentComparingParam = ComparingValue.Manufacturer;
-            RedrawPowerSupplies();
+            RedrawPowerSupplies([]);
         }
 
         private void BrandRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -89,7 +94,7 @@ namespace course_2_semester_1_cs_winforms
             currentSortParam = byBrand;
             ChangeComparingParameter(ComparingValue.Brand);
             currentComparingParam = ComparingValue.Brand;
-            RedrawPowerSupplies();
+            RedrawPowerSupplies([]);
         }
 
         private void CapacityRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -97,14 +102,14 @@ namespace course_2_semester_1_cs_winforms
             currentSortParam = byCapacity;
             ChangeComparingParameter(ComparingValue.Capacity);
             currentComparingParam = ComparingValue.Capacity;
-            RedrawPowerSupplies();
+            RedrawPowerSupplies([]);
         }
 
         // Sorting methods
 
         private void DirectSortRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            currentSortMethod = SortMethod.Direct;
+            currentSortMethod = SortMethod.Selection;
         }
 
         private void BubbleSortRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -131,10 +136,10 @@ namespace course_2_semester_1_cs_winforms
         {
             powerSupplies = original.Copy();
             ChangeComparingParameter(currentComparingParam);
-            RedrawPowerSupplies();
+            RedrawPowerSupplies([]);
         }
 
-        private void RedrawPowerSupplies()
+        private void RedrawPowerSupplies(List<int> compared)
         {
             var currentPixel = 10;
             for (int index = 0; index < count; index++)
@@ -147,6 +152,15 @@ namespace course_2_semester_1_cs_winforms
                 var p = new Pen(Color.Black, 12);
                 var point1 = new Point(currentPixel, 404);
                 var point2 = new Point(currentPixel, (int)(404f - ((float)powerSupplies[index].GetComparingValue()) / 1000f * 404));
+
+                if (compared.Contains(index))
+                {
+                    p = new Pen(Color.Blue, 12);
+                    graphics.DrawLine(p, point1, point2);
+                    currentPixel += 17;
+                    continue;
+                }
+
                 graphics.DrawLine(p, point1, point2);
                 currentPixel += 17;
             }
@@ -154,7 +168,7 @@ namespace course_2_semester_1_cs_winforms
 
         private void SortingContainerPanel_Paint(object sender, PaintEventArgs e)
         {
-            RedrawPowerSupplies();
+            RedrawPowerSupplies([]);
         }
 
         private void ChangeComparingParameter(ComparingValue value)
@@ -187,7 +201,7 @@ namespace course_2_semester_1_cs_winforms
     }
     enum SortMethod
     {
-        Direct,
+        Selection,
         Bubble,
         Shaker,
         Shell,
